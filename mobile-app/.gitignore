@@ -1,0 +1,11 @@
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+*.lock
+*.log
+.env
+.DS_Store
+Thumbs.db

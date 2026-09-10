@@ -1,0 +1,25 @@
+name: stage_mobile
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+# ✅ LA SECTION environment DOIT ÊTRE ICI (pas dans dependencies)
+environment:
+  sdk: ^3.12.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+  http: ^1.6.0
+  web_socket_channel: ^3.0.3
+  supabase_flutter: ^2.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true
