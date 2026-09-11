@@ -24,7 +24,7 @@ jobs:
     # 3. Extraction de l'identifiant court du commit Git (7 caractères)
     - name: Set Image Tag
       id: vars
-      run: echo "SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
     # 4. Build et Push de l'image Backend FastAPI
     - name: Build and Push Backend Image
@@ -35,7 +35,7 @@ jobs:
         push: true
         tags: |
           ${{ secrets.DOCKERHUB_USERNAME }}/task-manager-backend:latest
-          ${{ secrets.DOCKERHUB_USERNAME }}/task-manager-backend:${{ steps.vars.outputs.SHA_SHORT }}
+          ${{ secrets.DOCKERHUB_USERNAME }}/task-manager-backend:${{ steps.vars.outputs.sha_short }}
 
     # 5. Build et Push de l'image Frontend Manager Web
     - name: Build and Push Frontend Image
@@ -46,7 +46,7 @@ jobs:
         push: true
         tags: |
           ${{ secrets.DOCKERHUB_USERNAME }}/task-manager-web:latest
-          ${{ secrets.DOCKERHUB_USERNAME }}/task-manager-web:${{ steps.vars.outputs.SHA_SHORT }}
+          ${{ secrets.DOCKERHUB_USERNAME }}/task-manager-web:${{ steps.vars.outputs.sha_short }}
 
     # 6. Récupération du dépôt GitOps pour mise à jour
     - name: Checkout GitOps Repository
@@ -62,14 +62,14 @@ jobs:
         cd gitops-repo
         
         # Remplacement du tag dans le déploiement du Backend
-        sed -i "s|image: .*task-manager-backend:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/task-manager-backend:${{ steps.vars.outputs.SHA_SHORT }}|g" apps/backend-api/deployment.yaml
+        sed -i "s|image: .*task-manager-backend:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/task-manager-backend:${{ steps.vars.outputs.sha_short }}|g" apps/backend-api/deployment.yaml
         
         # Remplacement du tag dans le déploiement du Frontend
-        sed -i "s|image: .*task-manager-web:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/task-manager-web:${{ steps.vars.outputs.SHA_SHORT }}|g" apps/manager-web/deployment.yaml
+        sed -i "s|image: .*task-manager-web:.*|image: ${{ secrets.DOCKERHUB_USERNAME }}/task-manager-web:${{ steps.vars.outputs.sha_short }}|g" apps/manager-web/deployment.yaml
 
         # Publication des modifications sur task-manager-gitops
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
         git add .
-        git commit -m "chore(ci): update image tags to ${{ steps.vars.outputs.SHA_SHORT }}" || exit 0
+        git commit -m "chore(ci): update image tags to ${{ steps.vars.outputs.sha_short }}" || exit 0
         git push
