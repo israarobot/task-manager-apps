@@ -2,16 +2,14 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-# Copier requirements et installer les dépendances
+ENV PYTHONUNBUFFERED=1
+
+# Copie et installation des dépendances
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copier l'ensemble du code source dans /app
+# Copie du reste du code source (main.py)
 COPY . .
 
-# Lancer uvicorn (selon l'emplacement de votre fichier main.py)
-# Option A: si main.py est à la racine du dépôt backend
+# Lancement de FastAPI avec uvicorn (main.py étant directement à la racine)
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-
-# Option B: si main.py est dans un sous-dossier src/main.py ou app/main.py
-# CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
